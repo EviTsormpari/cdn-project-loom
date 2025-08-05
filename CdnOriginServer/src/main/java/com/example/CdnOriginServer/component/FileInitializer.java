@@ -15,7 +15,8 @@ public class FileInitializer implements CommandLineRunner {
     private final OriginRepository originRepository;
 
     @Autowired
-    public FileInitializer (OriginRepository originRepository) { this.originRepository = originRepository; }
+    public FileInitializer(OriginRepository originRepository) { this.originRepository = originRepository; }
+
     @Override
     public void run(String... args) throws Exception {
         File folder = new File("files");
@@ -24,17 +25,21 @@ public class FileInitializer implements CommandLineRunner {
         if (files != null) {
             for (File f: files) {
                 if (f.isFile()) {
-                    FileMetadata fileMetadata = new FileMetadata();
-                    fileMetadata.setFilename(f.getName());
-                    fileMetadata.setFilepath(f.getPath());
-                    fileMetadata.setFilesize(f.length());
-                    String mimeType = Files.probeContentType(f.toPath());
-                    if (mimeType == null) {
-                        mimeType = "application/octet-stream";
-                    } else {
-                        fileMetadata.setFiletype(mimeType);
+                    FileMetadata existingFile = originRepository.findByFilename(f.getName());
+                    if(existingFile == null) {
+                        FileMetadata fileMetadata = new FileMetadata();
+                        fileMetadata.setFilename(f.getName());
+                        fileMetadata.setFilepath(f.getPath());
+                        fileMetadata.setFilesize(f.length());
+                        String mimeType = Files.probeContentType(f.toPath());
+                        if (mimeType == null) {
+                            mimeType = "application/octet-stream";
+                        } else {
+                            fileMetadata.setFiletype(mimeType);
+                        }
+
+                        originRepository.save(fileMetadata);
                     }
-                    originRepository.save(fileMetadata);
                 }
             }
         }
