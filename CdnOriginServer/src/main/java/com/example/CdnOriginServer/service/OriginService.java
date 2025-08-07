@@ -13,6 +13,7 @@ import java.io.FileNotFoundException;
 
 @Service
 public class OriginService {
+
     private final OriginRepository originRepository;
 
     @Autowired

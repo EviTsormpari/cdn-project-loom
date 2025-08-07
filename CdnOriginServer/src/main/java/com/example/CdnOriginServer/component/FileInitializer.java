@@ -26,7 +26,7 @@ public class FileInitializer implements CommandLineRunner {
             for (File f: files) {
                 if (f.isFile()) {
                     FileMetadata existingFile = originRepository.findByFilename(f.getName());
-                    if(existingFile == null) {
+                    if (existingFile == null) {
                         FileMetadata fileMetadata = new FileMetadata();
                         fileMetadata.setFilename(f.getName());
                         fileMetadata.setFilepath(f.getPath());
@@ -37,7 +37,6 @@ public class FileInitializer implements CommandLineRunner {
                         } else {
                             fileMetadata.setFiletype(mimeType);
                         }
-
                         originRepository.save(fileMetadata);
                     }
                 }
