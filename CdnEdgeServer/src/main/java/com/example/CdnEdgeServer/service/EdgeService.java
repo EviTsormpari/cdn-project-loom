@@ -1,5 +1,6 @@
 package com.example.CdnEdgeServer.service;
 
+import com.example.CdnEdgeServer.dto.FileResourceDTO;
 import com.example.CdnEdgeServer.model.FileMetadata;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.Cacheable;
@@ -11,8 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
@@ -28,10 +28,22 @@ public class EdgeService {
     @Value("${edge.local.filepath}")
     private String edgeLocalFilepath;
 
+    public FileResourceDTO getFileByName(String filename) throws FileNotFoundException {
+        FileMetadata fileMetadata = fetchFileMetadataAndDownloadFile(filename);
+
+        if (fileMetadata == null) throw new RuntimeException("File metadata not found for filename: " + filename);
+
+        File file = new File(fileMetadata.getFilepath());
+        if (!file.exists()) throw new FileNotFoundException("File does not exists at path: " + file.getPath());
+
+        InputStreamResource resource = new InputStreamResource( new FileInputStream(file) );
+        return new FileResourceDTO(resource, fileMetadata);
+    }
+
     //To @Cachable apo tin Redis elegxei apo mono tou an yparxei to filename sto redis
     //an denyparxei kalei tin synartisi fetchFileMetadataAndDownloadFile gia na ginei i klisi apo ton origin kai epistrefei to FileMetadata
     //an yparxei epistrefei apo tin redis to FileMetdata
-    @Cacheable(value = "fileMetadataCache", key = "#filename")
+    @Cacheable(value = "fileMetadataCache", key = "#filename", sync = true)
     public FileMetadata fetchFileMetadataAndDownloadFile (String filename) {
         //Klisi ston origin gia na paroume ta metadata kai to arxeio
         //Using RestTemplate
@@ -52,7 +64,6 @@ public class EdgeService {
     }
 
     private FileMetadata createFileMetadataObject(HttpHeaders httpHeaders, String filename) {
-
         FileMetadata fileMetadata = new FileMetadata();
         fileMetadata.setFilename(filename);
         fileMetadata.setFiletype(httpHeaders.getContentType().toString());
@@ -64,7 +75,6 @@ public class EdgeService {
     }
 
     private void downloadFile(ResponseEntity<InputStreamResource> response, FileMetadata fileMetadata) {
-
         String filename = fileMetadata.getFilename();
         String filepath = fileMetadata.getFilepath();
 
