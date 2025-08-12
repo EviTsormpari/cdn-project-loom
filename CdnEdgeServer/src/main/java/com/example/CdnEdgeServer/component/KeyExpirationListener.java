@@ -25,14 +25,15 @@ public class KeyExpirationListener implements MessageListener {
 
     @Override
     public void onMessage(Message message, byte[] bytes) {
-        String key = new String(message.getBody()); //to body exei to filename
+        String key = new String(message.getBody());
+        String filename = key.contains("::") ? key.substring(key.indexOf("::") + 2) : key;
         String channel = new String(message.getChannel()); //to channel einai to an einai expired i evicted
 
         if(channel.contains(":expired")) logger.debug("expired key: {}", key);
         else if(channel.contains(":evicted")) logger.debug("evicted key: {}", key);
         else logger.debug("Other event on key: {} (channel: {})", key, channel);
 
-        deleteLocalFile(key);
+        deleteLocalFile(filename);
     }
 
     private void deleteLocalFile(String key) {
