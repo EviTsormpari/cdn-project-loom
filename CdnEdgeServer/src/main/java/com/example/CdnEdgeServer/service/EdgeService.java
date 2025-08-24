@@ -12,9 +12,12 @@ import java.io.*;
 public class EdgeService {
     private final FetchFromOriginService fetchFromOriginService;
 
+    private final DeleteFileFromCacheService deleteFileFromCacheService;
+
     @Autowired
-    public EdgeService(FetchFromOriginService fetchFromOriginService) {
+    public EdgeService(FetchFromOriginService fetchFromOriginService, DeleteFileFromCacheService deleteFileFromCacheService) {
         this.fetchFromOriginService = fetchFromOriginService;
+        this.deleteFileFromCacheService = deleteFileFromCacheService;
     }
 
     public FileResourceDTO getFileByName(String filename) throws FileNotFoundException {
@@ -27,5 +30,9 @@ public class EdgeService {
 
         InputStreamResource resource = new InputStreamResource( new FileInputStream(file) );
         return new FileResourceDTO(resource, fileMetadata);
+    }
+
+    public void deleteFileByFilename(String filename) {
+        deleteFileFromCacheService.deleteFileByFilename(filename);
     }
 }

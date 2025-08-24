@@ -45,14 +45,15 @@ public class FetchFromOriginService {
                 originUrl + filename,
                 HttpMethod.GET,
                 HttpEntity.EMPTY,
-                Resource.class);
+                Resource.class
+        );
 
         //Take the headers of the response
         HttpHeaders httpHeaders = response.getHeaders();
 
         FileMetadata fileMetadata = createFileMetadataObject(httpHeaders, filename);
 
-        downloadFile(response, fileMetadata);
+        downloadFile(response, fileMetadata.getFilepath());
 
         return fileMetadata;
     }
@@ -68,10 +69,7 @@ public class FetchFromOriginService {
         return fileMetadata;
     }
 
-    private void downloadFile(ResponseEntity<Resource> response, FileMetadata fileMetadata) {
-        String filename = fileMetadata.getFilename();
-        String filepath = fileMetadata.getFilepath();
-
+    private void downloadFile(ResponseEntity<Resource> response, String filepath) {
         //Edw kanoume download to arxeio sto pc tou edge server
         //Pairnoume to InputStream apo to InputStreamResource kai me files.copy to kanoyme copy opou 8eloume
         try (InputStream is = response.getBody().getInputStream()) {

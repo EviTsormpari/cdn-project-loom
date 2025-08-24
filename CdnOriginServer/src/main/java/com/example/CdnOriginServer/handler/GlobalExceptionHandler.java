@@ -18,10 +18,10 @@ public class GlobalExceptionHandler {
                 .body(ex.getMessage());
     }
 
-    @ExceptionHandler(OriginService.FileMetadataNotFoundException.class)
-    public ResponseEntity<String> handleMetadataNotFound(OriginService.FileMetadataNotFoundException ex) {
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<String> handleRuntimeException(RuntimeException ex) {
         return ResponseEntity
-                .status(HttpStatus.NOT_FOUND)
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(ex.getMessage());
     }
 }

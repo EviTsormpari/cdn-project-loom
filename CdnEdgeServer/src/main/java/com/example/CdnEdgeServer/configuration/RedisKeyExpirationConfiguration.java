@@ -23,6 +23,7 @@ public class RedisKeyExpirationConfiguration {
         listenerContainer.setConnectionFactory(connectionFactory);
         listenerContainer.addMessageListener(keyExpirationListener, new PatternTopic("__keyevent@*__:expired")); //listener gia pattern logw expiration apo ttl
         listenerContainer.addMessageListener(keyExpirationListener, new PatternTopic("__keyevent@*__:evicted")); //listener gia pattern evicted logw lru antikatastasis
+        listenerContainer.addMessageListener(keyExpirationListener, new PatternTopic("__keyevent@*__:del")); //listener gia delete apeu8eias apo delete endpoint
         listenerContainer.setErrorHandler(e -> logger.error("There was an error in redis key expiration listener container", e));
 
         return listenerContainer;

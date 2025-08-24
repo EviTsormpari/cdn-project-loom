@@ -8,10 +8,7 @@ import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.FileNotFoundException;
 
@@ -35,5 +32,12 @@ public class EdgeController {
                 .contentLength(metadata.getFilesize())
                 .contentType(MediaType.parseMediaType(metadata.getFiletype()))
                 .body(resource);
+    }
+
+    @DeleteMapping("/{filename}")
+    public ResponseEntity<String> deleteFileByFilename (@PathVariable String filename) {
+        edgeService.deleteFileByFilename(filename);
+
+        return ResponseEntity.ok("Deletion triggered for file: " + filename);
     }
 }
