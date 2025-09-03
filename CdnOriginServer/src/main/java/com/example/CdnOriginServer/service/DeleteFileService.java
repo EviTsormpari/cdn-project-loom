@@ -42,6 +42,8 @@ public class DeleteFileService {
         //No need for if statement because if the file doesnt exists we have an exception
         File file = getExistingFile(fileMetadata, filename);
 
+        originRepository.deleteByFilename(filename);
+
         //Deletes file from system
         if (file.delete()) {
             logger.info("Deleted local file with filename: {}", filename);
@@ -50,8 +52,7 @@ public class DeleteFileService {
             throw new RuntimeException("Failed to delete file: " + file.getPath());
         }
 
-        originRepository.deleteByFilename(filename);
-        return deleteFileFromCaches(filename);
+        return deleteFileFromCaches(filename); //TODO LOOK AGAIN FOR ATOMICITY
     }
 
     private File getExistingFile(FileMetadata fileMetadata, String filename) throws FileNotFoundException {

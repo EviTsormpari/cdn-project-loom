@@ -10,4 +10,6 @@ public interface OriginRepository extends JpaRepository<FileMetadata, Long> {
     FileMetadata findByFilename(String filename);
 
     void deleteByFilename(String filename);
+
+    Boolean existsByFilename(String filename);
 }

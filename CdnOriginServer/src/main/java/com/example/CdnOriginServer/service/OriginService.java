@@ -3,20 +3,12 @@ package com.example.CdnOriginServer.service;
 import com.example.CdnOriginServer.dto.FileResourceDTO;
 import com.example.CdnOriginServer.model.FileMetadata;
 import com.example.CdnOriginServer.repository.OriginRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.InputStreamResource;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
+import java.io.*;
 
 @Service
 public class OriginService {
@@ -25,10 +17,13 @@ public class OriginService {
 
     private final DeleteFileService deleteFileService;
 
+    private final CreateFileService createFileService;
+
     @Autowired
-    public OriginService(OriginRepository originRepository, DeleteFileService deleteFileService) {
+    public OriginService(OriginRepository originRepository, DeleteFileService deleteFileService, CreateFileService createFileService) {
         this.originRepository = originRepository;
         this.deleteFileService = deleteFileService;
+        this.createFileService = createFileService;
     }
 
     public FileResourceDTO getFileByFilename(String filename) throws FileNotFoundException {
@@ -47,6 +42,10 @@ public class OriginService {
 
     public ResponseEntity<String> deleteFileByFilename(String filename) throws FileNotFoundException {
         return deleteFileService.deleteFileByFilename(filename);
+    }
+
+    public void createFile(FileMetadata fileMetadata, InputStream inputStream) throws IOException {
+        createFileService.createFile(fileMetadata, inputStream);
     }
 
     private File getExistingFile(FileMetadata fileMetadata, String filename) throws FileNotFoundException {
