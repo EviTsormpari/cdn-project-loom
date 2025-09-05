@@ -20,19 +20,16 @@ import java.io.FileNotFoundException;
 public class DeleteFileService {
 
     private final OriginRepository originRepository;
-
     private final RestTemplate restTemplate = new RestTemplate();
-
     @Value("${edge.server.url}")
     private String edgeUrl;
-
     private static final Logger logger = LoggerFactory.getLogger(DeleteFileService.class);
 
     @Autowired
     public DeleteFileService(OriginRepository originRepository) { this.originRepository = originRepository; }
 
     @Transactional(rollbackFor = Exception.class)
-    public ResponseEntity<String> deleteFileByFilename(String filename) throws FileNotFoundException {
+    public String deleteFileByFilename(String filename) throws FileNotFoundException {
         FileMetadata fileMetadata = originRepository.findByFilename(filename);
 
         if (fileMetadata == null) {
@@ -52,7 +49,7 @@ public class DeleteFileService {
             throw new RuntimeException("Failed to delete file: " + file.getPath());
         }
 
-        return deleteFileFromCaches(filename); //TODO LOOK AGAIN FOR ATOMICITY
+        return deleteFileFromCaches(filename).getBody() + "and origin for file: "; //TODO LOOK AGAIN FOR ATOMICITY
     }
 
     private File getExistingFile(FileMetadata fileMetadata, String filename) throws FileNotFoundException {

@@ -4,12 +4,11 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import org.springframework.data.domain.Persistable;
 
 @Entity
-public class FileMetadata {
+public class FileMetadata implements Persistable<String> {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
     private String filename;
     private String filepath;
     private String filetype;
@@ -17,13 +16,17 @@ public class FileMetadata {
 
     public FileMetadata() { }
 
-    public long getId() { return id; }
+    //Me auti tin synartisi i .save() 8a elegxei an yparxei stin basi to arxeio symfwna me to filename
+    @Override
+    public boolean isNew() { return filename == null; }
 
-    public void setId(long id) { this.id = id; }
+    public String getId() { return filename; }
 
-    public String getFilename() { return filename; }
+    public void setId(String id) { this.filename = id; }
 
-    public void setFilename(String filename) { this.filename = filename; }
+//    public String getFilename() { return filename; }
+//
+//    public void setFilename(String filename) { this.filename = filename; }
 
     public String getFilepath() { return filepath; }
 

@@ -4,7 +4,6 @@ import com.example.CdnOriginServer.dto.FileResourceDTO;
 import com.example.CdnOriginServer.model.FileMetadata;
 import com.example.CdnOriginServer.service.OriginService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -14,17 +13,12 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 
 @RestController
 @RequestMapping("api/v1/files")
 public class OriginController {
 
     private final OriginService originService;
-
-    @Value("${origin.local.filepath}")
-    private String originFilepath;
-
     @Autowired
     public OriginController(OriginService originService) { this.originService = originService; }
 
@@ -35,34 +29,30 @@ public class OriginController {
         InputStreamResource resource = fileResourceDTO.getResource();
 
         return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + metadata.getFilename() + "\"")
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + metadata.getId() + "\"")
                 .contentLength(metadata.getFilesize())
                 .contentType(MediaType.parseMediaType(metadata.getFiletype()))
                 .body(resource);
     }
 
+    @PutMapping("/update")
+    public ResponseEntity<String> updateFile(@RequestParam("file") MultipartFile file) throws IOException {
+        String response = originService.updateFile(file);
+
+        return ResponseEntity.ok(response);
+    }
+
     @PostMapping("/upload")
     public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile file) throws IOException {
-        String filename = file.getOriginalFilename();
-        String filetype = file.getContentType();
-        long filesize = file.getSize();
-        String filepath = originFilepath + filename;
+        String response = originService.createFile(file);
 
-        FileMetadata metadata = new FileMetadata();
-        metadata.setFilename(filename);
-        metadata.setFilepath(filepath);
-        metadata.setFiletype(filetype);
-        metadata.setFilesize(filesize);
-
-        originService.createFile(metadata, file.getInputStream());
-
-        return ResponseEntity.ok("Upload triggered for file: " + filename);
+        return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/{filename}")
     public ResponseEntity<String> deleteFileByFilename(@PathVariable String filename) throws FileNotFoundException {
-        ResponseEntity<String> response = originService.deleteFileByFilename(filename);
+        String response = originService.deleteFileByFilename(filename);
 
-        return ResponseEntity.ok(response.getBody());
+        return ResponseEntity.ok(response);
     }
 }

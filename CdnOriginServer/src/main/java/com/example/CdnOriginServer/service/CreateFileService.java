@@ -17,23 +17,23 @@ import java.nio.file.StandardCopyOption;
 public class CreateFileService {
 
     private final OriginRepository originRepository;
-
     @Value("${origin.local.filepath}")
     private String originFilepath;
 
     public CreateFileService(OriginRepository originRepository) { this.originRepository = originRepository; }
 
     @Transactional(rollbackFor = Exception.class)
-    public void createFile(FileMetadata fileMetadata, InputStream inputStream) throws IOException {
-        if (originRepository.existsByFilename(fileMetadata.getFilename())) {
+    public String createFile(FileMetadata fileMetadata, InputStream inputStream) throws IOException {
+        if (originRepository.existsByFilename(fileMetadata.getId())) {
             throw new RuntimeException("This file already exists");
         }
 
-        Path pathForDownloadFile = Paths.get(originFilepath).resolve(fileMetadata.getFilename());
+        Path pathForDownloadFile = Paths.get(originFilepath).resolve(fileMetadata.getId());
 
         try {
             Files.copy(inputStream, pathForDownloadFile, StandardCopyOption.REPLACE_EXISTING);
             originRepository.save(fileMetadata);
+            return "Upload triggered for file: " + fileMetadata.getId();
         } catch (Exception e) { //Rollback episis kai gia to arxeio sto disko. To transactional kanei mono gia db
             Files.deleteIfExists(pathForDownloadFile);
             throw e;

@@ -4,9 +4,10 @@ import com.example.CdnOriginServer.dto.FileResourceDTO;
 import com.example.CdnOriginServer.model.FileMetadata;
 import com.example.CdnOriginServer.repository.OriginRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.InputStreamResource;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
 
@@ -14,14 +15,18 @@ import java.io.*;
 public class OriginService {
 
     private final OriginRepository originRepository;
-
+    private final UpdateFileService updateFileService;
+    private final CreateFileService createFileService;
     private final DeleteFileService deleteFileService;
 
-    private final CreateFileService createFileService;
+
+    @Value("${origin.local.filepath}")
+    private String originFilepath;
 
     @Autowired
-    public OriginService(OriginRepository originRepository, DeleteFileService deleteFileService, CreateFileService createFileService) {
+    public OriginService(OriginRepository originRepository, UpdateFileService updateFileService, DeleteFileService deleteFileService, CreateFileService createFileService) {
         this.originRepository = originRepository;
+        this.updateFileService = updateFileService;
         this.deleteFileService = deleteFileService;
         this.createFileService = createFileService;
     }
@@ -40,12 +45,18 @@ public class OriginService {
         return new FileResourceDTO(resource, fileMetadata);
     }
 
-    public ResponseEntity<String> deleteFileByFilename(String filename) throws FileNotFoundException {
-        return deleteFileService.deleteFileByFilename(filename);
+    public String updateFile(MultipartFile file) throws IOException {
+        FileMetadata fileMetadata = getFileMetadataFromFile(file);
+        return updateFileService.updateFile(fileMetadata, file.getInputStream());
     }
 
-    public void createFile(FileMetadata fileMetadata, InputStream inputStream) throws IOException {
-        createFileService.createFile(fileMetadata, inputStream);
+    public String createFile(MultipartFile file) throws IOException {
+        FileMetadata fileMetadata = getFileMetadataFromFile(file);
+        return createFileService.createFile(fileMetadata, file.getInputStream());
+    }
+
+    public String deleteFileByFilename(String filename) throws FileNotFoundException {
+        return deleteFileService.deleteFileByFilename(filename);
     }
 
     private File getExistingFile(FileMetadata fileMetadata, String filename) throws FileNotFoundException {
@@ -54,5 +65,20 @@ public class OriginService {
 
         //If we reach here return the file
         return file;
+    }
+
+    private FileMetadata getFileMetadataFromFile(MultipartFile file) {
+        String filename = file.getOriginalFilename();
+        String filetype = file.getContentType();
+        long filesize = file.getSize();
+        String filepath = originFilepath + filename;
+
+        FileMetadata metadata = new FileMetadata();
+        metadata.setId(filename);
+        metadata.setFilepath(filepath);
+        metadata.setFiletype(filetype);
+        metadata.setFilesize(filesize);
+
+        return metadata;
     }
 }

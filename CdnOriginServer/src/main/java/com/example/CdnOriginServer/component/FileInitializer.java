@@ -28,7 +28,7 @@ public class FileInitializer implements CommandLineRunner {
                     FileMetadata existingFile = originRepository.findByFilename(f.getName());
                     if (existingFile == null) {
                         FileMetadata fileMetadata = new FileMetadata();
-                        fileMetadata.setFilename(f.getName());
+                        fileMetadata.setId(f.getName());
                         fileMetadata.setFilepath(f.getPath());
                         fileMetadata.setFilesize(f.length());
                         String mimeType = Files.probeContentType(f.toPath());

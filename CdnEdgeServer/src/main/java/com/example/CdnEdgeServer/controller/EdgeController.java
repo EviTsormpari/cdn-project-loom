@@ -38,6 +38,6 @@ public class EdgeController {
     public ResponseEntity<String> deleteFileByFilename (@PathVariable String filename) {
         edgeService.deleteFileByFilename(filename);
 
-        return ResponseEntity.ok("Deletion triggered for file: " + filename);
+        return ResponseEntity.ok("Deletion triggered at edge ");
     }
 }
