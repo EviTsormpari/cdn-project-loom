@@ -38,21 +38,18 @@ public class OriginController {
     @PutMapping("/update")
     public ResponseEntity<String> updateFile(@RequestParam("file") MultipartFile file) throws IOException {
         String response = originService.updateFile(file);
-
         return ResponseEntity.ok(response);
     }
 
     @PostMapping("/upload")
     public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile file) throws IOException {
         String response = originService.createFile(file);
-
         return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/{filename}")
-    public ResponseEntity<String> deleteFileByFilename(@PathVariable String filename) throws FileNotFoundException {
+    public ResponseEntity<String> deleteFileByFilename(@PathVariable String filename) throws IOException {
         String response = originService.deleteFileByFilename(filename);
-
         return ResponseEntity.ok(response);
     }
 }

@@ -37,7 +37,6 @@ public class EdgeController {
     @DeleteMapping("/{filename}")
     public ResponseEntity<String> deleteFileByFilename (@PathVariable String filename) {
         edgeService.deleteFileByFilename(filename);
-
         return ResponseEntity.ok("Deletion triggered at edge ");
     }
 }
