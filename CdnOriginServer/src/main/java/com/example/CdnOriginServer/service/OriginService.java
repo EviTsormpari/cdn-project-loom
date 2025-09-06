@@ -3,10 +3,8 @@ package com.example.CdnOriginServer.service;
 import com.example.CdnOriginServer.component.Helper;
 import com.example.CdnOriginServer.dto.FileResourceDTO;
 import com.example.CdnOriginServer.model.FileMetadata;
-import com.example.CdnOriginServer.repository.OriginRepository;
 import com.example.CdnOriginServer.utils.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -32,7 +30,7 @@ public class OriginService {
         FileMetadata fileMetadata = helper.getFileMetadataFromDB(filename);
 
         //No need for if statement because if the file doesnt exists we have an exception
-        File file = FileUtils.getExistingFile(fileMetadata);
+        File file = FileUtils.getExistingFileFromFileSystem(fileMetadata);
 
         InputStreamResource resource = new InputStreamResource( new FileInputStream(file) );
         return new FileResourceDTO(resource, fileMetadata);

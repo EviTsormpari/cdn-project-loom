@@ -1,7 +1,6 @@
 package com.example.CdnOriginServer.utils;
 
 import com.example.CdnOriginServer.model.FileMetadata;
-import com.example.CdnOriginServer.service.DeleteFileService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,7 +15,7 @@ public class FileUtils {
 
     private static final Logger logger = LoggerFactory.getLogger(FileUtils.class);
 
-    public static File getExistingFile(FileMetadata fileMetadata) throws FileNotFoundException {
+    public static File getExistingFileFromFileSystem(FileMetadata fileMetadata) throws FileNotFoundException {
         File file = new File(fileMetadata.getFilepath());
         if (!file.exists()) {
             logger.warn("File does not exists at path: " + file.getPath());

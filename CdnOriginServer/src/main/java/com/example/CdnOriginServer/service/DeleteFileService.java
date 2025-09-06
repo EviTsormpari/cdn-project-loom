@@ -37,7 +37,7 @@ public class DeleteFileService {
         FileMetadata fileMetadata = helper.getFileMetadataFromDB(filename);
 
         //No need for if statement because if the file doesnt exists we have an exception
-        File file = FileUtils.getExistingFile(fileMetadata);
+        File file = FileUtils.getExistingFileFromFileSystem(fileMetadata);
 
         //Kanoume backup arxeio se periptwsi pou apotuxei i synartisi (gia to rollback)
         Path backupPath = FileUtils.createBackupFile(file.toPath(), filename);
