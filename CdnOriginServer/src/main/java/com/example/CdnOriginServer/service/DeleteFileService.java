@@ -65,11 +65,11 @@ public class DeleteFileService {
         }
     }
 
-    private void deleteLocalFile(File file, String filename) {
+    private void deleteLocalFile(File file, String filename) throws IOException {
         //Deletes file from filesystemsystem
         if (!file.delete()) {
-            logger.warn("Failed to delete file: " + file.getPath());
-            throw new RuntimeException("Failed to delete file: " + file.getPath());
+            logger.error("Failed to delete file: " + filename + " at path: " + file.getPath());
+            throw new IOException("Failed to delete file: " + filename);
         }
     }
 }

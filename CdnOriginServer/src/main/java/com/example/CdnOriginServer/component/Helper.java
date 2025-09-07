@@ -1,6 +1,7 @@
 package com.example.CdnOriginServer.component;
 
 import com.example.CdnOriginServer.enums.Existence;
+import com.example.CdnOriginServer.handler.GlobalException;
 import com.example.CdnOriginServer.model.FileMetadata;
 import com.example.CdnOriginServer.repository.OriginRepository;
 import org.slf4j.Logger;
@@ -39,7 +40,7 @@ public class Helper {
         FileMetadata fileMetadata = originRepository.findByFilename(filename);
 
         if (fileMetadata == null) {
-            logger.warn("File metadata not found for filename: {}" , filename);
+            logger.error("File metadata not found for filename: {}" , filename);
             throw new FileNotFoundException("File metadata not found for filename: " + filename);
         }
 
@@ -50,7 +51,7 @@ public class Helper {
         String filename = file.getOriginalFilename();
         String filetype = file.getContentType();
         long filesize = file.getSize();
-        String filepath = originFilepath + filename;
+        String filepath = originFilepath + "/" + filename;
 
         FileMetadata metadata = new FileMetadata();
         metadata.setId(filename);
@@ -68,7 +69,7 @@ public class Helper {
             }
             case MUST_NOT_EXIST -> {
                 logger.error("File " + filename + " already exists");
-                throw new RuntimeException("File " + filename + " already exists");
+                throw new GlobalException.FileConflictException("File " + filename + " already exists");
             }
         }
     }

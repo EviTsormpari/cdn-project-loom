@@ -1,8 +1,15 @@
 package com.example.CdnEdgeServer.model;
 
-public class FileMetadata {
+import org.springframework.data.annotation.Id;
+import org.springframework.data.redis.core.RedisHash;
 
-    private long id;
+/*
+Το FileMetadata είναι η κλάση για την αναπαράσταση των δεδομένων που αποθηκεύονται στην κρυφή μνήμη.
+ */
+
+@RedisHash
+public class FileMetadata {
+    @Id
     private String filename;
     private String filepath;
     private String filetype;
@@ -10,13 +17,9 @@ public class FileMetadata {
 
     public FileMetadata() { }
 
-    public long getId() { return id; }
+    public String getId() { return filename; }
 
-    public void setId(long id) { this.id = id; }
-
-    public String getFilename() { return filename; }
-
-    public void setFilename(String filename) { this.filename = filename; }
+    public void setId(String filename) { this.filename = filename; }
 
     public String getFilepath() { return filepath; }
 

@@ -10,7 +10,15 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.FileNotFoundException;
+import java.io.IOException;
+
+/*
+Το EdgeController είναι υπεύθυνο για την έκθεση και διαχείριση των REST endpoints του συστήματος.
+
+Μέσω αυτών επιτρέπεται η επικοινωνία εξωτερικών εφαρμογών με τον διακομιστή κρυφής μνήμης.
+Κάθε endpoint αντιστοιχεί σε μια συγκεκριμένη λειτουργικότητα, καλεί το αντίστοιχο service και επιστρέφει
+την κατάλληλη απόκριση (επιτυχία ή σφάλμα) προς τον αιτούντα.
+ */
 
 @RestController
 @RequestMapping("api/v1/files")
@@ -22,13 +30,13 @@ public class EdgeController {
     public EdgeController(EdgeService edgeService) { this.edgeService = edgeService; }
 
     @GetMapping("/{filename}")
-    public ResponseEntity<InputStreamResource> getFileByFilename (@PathVariable String filename) throws FileNotFoundException {
+    public ResponseEntity<InputStreamResource> getFileByFilename (@PathVariable String filename) throws IOException {
         FileResourceDTO fileResourceDTO = edgeService.getFileByName(filename);
-        FileMetadata metadata = fileResourceDTO.getMetadata();
-        InputStreamResource resource = fileResourceDTO.getResource();
+        FileMetadata metadata = fileResourceDTO.metadata();
+        InputStreamResource resource = fileResourceDTO.resource();
 
         return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + metadata.getFilename() + "\"")
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + metadata.getId() + "\"")
                 .contentLength(metadata.getFilesize())
                 .contentType(MediaType.parseMediaType(metadata.getFiletype()))
                 .body(resource);
@@ -36,7 +44,7 @@ public class EdgeController {
 
     @DeleteMapping("/{filename}")
     public ResponseEntity<String> deleteFileByFilename (@PathVariable String filename) {
-        edgeService.deleteFileByFilename(filename);
-        return ResponseEntity.ok("Deletion triggered at edge ");
+        String response = edgeService.deleteFileByFilename(filename);
+        return ResponseEntity.ok(response);
     }
 }

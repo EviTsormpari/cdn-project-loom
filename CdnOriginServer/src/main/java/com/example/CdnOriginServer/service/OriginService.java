@@ -29,7 +29,7 @@ public class OriginService {
     public FileResourceDTO getFileByFilename(String filename) throws FileNotFoundException {
         FileMetadata fileMetadata = helper.getFileMetadataFromDB(filename);
 
-        //No need for if statement because if the file doesnt exists we have an exception
+        //No need for if statement because if the file doesnt exist we have an exception
         File file = FileUtils.getExistingFileFromFileSystem(fileMetadata);
 
         InputStreamResource resource = new InputStreamResource( new FileInputStream(file) );

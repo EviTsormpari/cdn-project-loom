@@ -12,9 +12,13 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-//Auto to component einai o listener o opoios akouei otan ena kleidi stin redis ginetai expired
-//Molis ginei expired diagrafei to arxeio apo ton topiko disko
-//etsi yparxei sygxronismos tis redis me to filesystem
+/*
+Το component KeyExpirationListener είναι υπεύθυνο για να "ακούει" τα events λήξης/διαγραφής των κλειδιών της Redis.
+Όταν ληφθεί event για ένα συγκεκριμένο key, καλείται η συνάρτηση deleteLocalFile.
+Η deleteLocalFile διαγράφει το αρχείο από τον τοπικό φάκελο του project.
+Έτσι επιτυγχάνεται ο συγχρονισμός της κρυφής μνήμης και του τοπικού φακέλου του project με τα αρχεία.
+ */
+
 @Component
 public class KeyExpirationListener implements MessageListener {
 
@@ -27,17 +31,21 @@ public class KeyExpirationListener implements MessageListener {
     public void onMessage(Message message, byte[] bytes) {
         String key = new String(message.getBody());
         String filename = key.contains("::") ? key.substring(key.indexOf("::") + 2) : key;
-        String channel = new String(message.getChannel()); //to channel einai to an einai expired i evicted
+        String channel = new String(message.getChannel());
 
         if (channel.contains(":expired")) logger.debug("expired key: {}", key);
         else if (channel.contains(":evicted")) logger.debug("evicted key: {}", key);
         else if (channel.contains(":del")) logger.debug("deleted key: {}", key);
         else logger.debug("Other event on key: {} (channel: {})", key, channel);
 
-        deleteLocalFile(filename);
+        try {
+            deleteLocalFile(filename);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
-    private void deleteLocalFile(String key) {
+    private void deleteLocalFile(String key) throws IOException {
         Path path = Paths.get(edgeLocalFilepath).resolve(key);
 
         try {
@@ -50,6 +58,7 @@ public class KeyExpirationListener implements MessageListener {
             }
         } catch (IOException e) {
             logger.error("Failed to delete file for key {}: {}", key, e.getMessage());
+            throw new IOException("Failed to delete local file: " + key, e);
         }
     }
 }

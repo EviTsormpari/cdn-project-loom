@@ -4,8 +4,16 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.client.RestClientResponseException;
 
 import java.io.FileNotFoundException;
+
+/*
+Το GlobalExceptionHandler αποτελεί το κεντρικό σημείο διαχείρισης σφαλμάτων της εφαρμογής.
+
+Μετατρέπει συγκεκριμένα exceptions σε κατάλληλες HTTP αποκρίσεις ώστε ο client να λαμβάνει
+συνεπή και κατανοητά μηνύματα σφάλματος.
+ */
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -17,10 +25,10 @@ public class GlobalExceptionHandler {
                 .body(ex.getMessage());
     }
 
-    @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<String> handleRuntimeException(RuntimeException ex) {
+    @ExceptionHandler(RestClientResponseException.class)
+    public ResponseEntity<String> handleRestClientResponse(RestClientResponseException ex) {
         return ResponseEntity
-                .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(ex.getMessage());
+                .status(ex.getStatusCode())
+                .body("Origin error: " + ex.getResponseBodyAsString());
     }
 }

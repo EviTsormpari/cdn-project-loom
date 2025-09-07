@@ -36,8 +36,8 @@ public class UpdateFileService {
 
     @Transactional(rollbackFor = Exception.class)
     public String updateFile(MultipartFile file) throws IOException {
-        FileMetadata metadata = helper.getFileMetadataFromFile(file); //pairnoume ta metadata tou kainoutgiou arxeiou
-        FileMetadata fileMetadata = helper.getFileMetadataFromDB(metadata.getId()); //8a finei elegxos an uparxei stin db kai an uparxoun ua ferei ta metadata toy paliou arxeio sti basi
+        FileMetadata newFileMetadata = helper.getFileMetadataFromFile(file); //pairnoume ta newFileMetadata tou kainoutgiou arxeiou
+        FileMetadata fileMetadata = helper.getFileMetadataFromDB(newFileMetadata.getId()); //8a finei elegxos an uparxei stin db kai an uparxoun ua ferei ta newFileMetadata toy paliou arxeio sti basi
         String filename = fileMetadata.getId();
         helper.validateFileExistence(filename, Existence.MUST_EXIST);
 
@@ -47,16 +47,16 @@ public class UpdateFileService {
         boolean updatedLocally = false;
 
         try{
-            updateFileOnDisk(metadata, file.getInputStream());
+            updateFileOnDisk(newFileMetadata, file.getInputStream());
             updatedLocally = true;
-            originRepository.save(metadata);
-            String response = helper.informCaches(filename).getBody() + "and updated at origin for filename: " + filename; //Update tous edge pou exoun to arxeio
+            originRepository.save(newFileMetadata);
+            String response = helper.informCaches(filename).getBody() + "and successfully updated at origin for filename: " + filename; //Update tous edge pou exoun to arxeio
             logger.info("The file {} updated successfully on the filesystem, database and edge caches", filename);
 
             return response;
-        } catch (Exception e) { //an kapoia diagrafei apotuxei epanaferw to arxeio sto filesystem
+        } catch (Exception e) { //an kapoia diagrafi apotuxei epanaferw to arxeio sto filesystem
             if (updatedLocally) {
-                helper.restoreFile(backupPath, metadata);
+                helper.restoreFile(backupPath, newFileMetadata);
                 logger.warn("Rollback: restored file {} due to failure", filename, e);
             }
 

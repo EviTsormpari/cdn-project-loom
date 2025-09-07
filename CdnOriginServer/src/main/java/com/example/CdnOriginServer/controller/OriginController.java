@@ -25,8 +25,8 @@ public class OriginController {
     @GetMapping("/{filename}")
     public ResponseEntity<InputStreamResource> getFileByFilename(@PathVariable String filename) throws FileNotFoundException {
         FileResourceDTO fileResourceDTO = originService.getFileByFilename(filename);
-        FileMetadata metadata = fileResourceDTO.getMetadata();
-        InputStreamResource resource = fileResourceDTO.getResource();
+        FileMetadata metadata = fileResourceDTO.metadata();
+        InputStreamResource resource = fileResourceDTO.resource();
 
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + metadata.getId() + "\"")

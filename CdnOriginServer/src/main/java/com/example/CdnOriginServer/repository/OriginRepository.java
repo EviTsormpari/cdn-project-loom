@@ -11,5 +11,4 @@ public interface OriginRepository extends JpaRepository<FileMetadata, String> {
 
     void deleteByFilename(String filename);
 
-    Boolean existsByFilename(String filename);
 }

@@ -50,6 +50,7 @@ public class CreateFileService {
         } catch (Exception e) { //Rollback episis kai gia to arxeio sto disko. To transactional kanei mono gia db
             Files.deleteIfExists(pathForDownloadFile);
             logger.warn("Rollback: deleted file {} due to failure", filename, e);
+
             throw e;
         }
     }

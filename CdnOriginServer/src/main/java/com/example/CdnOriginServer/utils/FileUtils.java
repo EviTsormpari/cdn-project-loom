@@ -18,8 +18,8 @@ public class FileUtils {
     public static File getExistingFileFromFileSystem(FileMetadata fileMetadata) throws FileNotFoundException {
         File file = new File(fileMetadata.getFilepath());
         if (!file.exists()) {
-            logger.warn("File does not exists at path: " + file.getPath());
-            throw new FileNotFoundException("File does not exists at path: " + file.getPath());
+            logger.error("File does not exist at path: " + file.getPath());
+            throw new FileNotFoundException("File does not exist at path: " + file.getPath());
         }
 
         //If we reach here return the file
