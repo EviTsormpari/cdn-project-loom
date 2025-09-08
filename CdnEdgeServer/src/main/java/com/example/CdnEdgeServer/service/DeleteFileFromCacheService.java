@@ -6,7 +6,7 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 
 /*
-Service για την πραγματοποίηση της διαγραφής των δεδομένων με κλειδί #filename από την κρυφή μνήμη.
+Υπηρεσία για την πραγματοποίηση της διαγραφής των δεδομένων με κλειδί #filename από την κρυφή μνήμη.
  */
 
 @Service

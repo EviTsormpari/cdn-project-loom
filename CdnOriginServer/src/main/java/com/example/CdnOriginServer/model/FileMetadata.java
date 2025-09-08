@@ -6,6 +6,10 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import org.springframework.data.domain.Persistable;
 
+/*
+Το FileMetadata είναι η κλάση για την αναπαράσταση των δεδομένων που αποθηκεύονται στη βάση δεδομένων.
+ */
+
 @Entity
 public class FileMetadata implements Persistable<String> {
     @Id
@@ -16,7 +20,17 @@ public class FileMetadata implements Persistable<String> {
 
     public FileMetadata() { }
 
-    //Me auti tin synartisi i .save() 8a elegxei an yparxei stin basi to arxeio symfwna me to filename
+    /*
+    Η μέθοδος isNew() χρησιμοποιείται από το Spring Data για να καθορίσει
+    αν το αντικείμενο είναι καινούριο ή αν υπάρχει ήδη στη βάση δεδομένων ελέγχοντας το id.
+
+    Κάνοντας Override τη μέθοδο δίνεται η δυνατότητα ελέγχου ύπαρξης ενός αντικειμένου
+    στη βάση σύμφωνα με το filename (το οποίο για τις ανάγκες του project αποτελεί το id).
+
+    Αν επιστρέψει true (δηλαδή όταν το filename είναι null), η .save() θα κάνει INSERT στη βάση.
+    Αν επιστρέψει false (δηλαδή όταν υπάρχει τιμή στο filename), η .save() θα θεωρήσει ότι το
+    αντικείμενο υπάρχει ήδη και θα κάνει UPDATE με βάση το filename.
+     */
     @Override
     public boolean isNew() { return filename == null; }
 

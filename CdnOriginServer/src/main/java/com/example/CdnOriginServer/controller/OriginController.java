@@ -14,6 +14,17 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
+/*
+Το OriginController είναι υπεύθυνο για την έκθεση και διαχείριση των REST endpoints του συστήματος.
+
+Μέσω αυτών επιτρέπεται η επικοινωνία εξωτερικών εφαρμογών με τον κεντρικό διακομιστή.
+Τα endpoints που παρέχονται είναι για:
+1. Την απόκτηση ενός αρχείου με βάση το όνομά του.
+2. Την επεξεργασία ενός αρχείου με βάση το όνομά του.
+3. Τη δημιουργία ενός αρχείου.
+4. Τη διαγραφή ενός αρχείου με βάση το όνομά του.
+ */
+
 @RestController
 @RequestMapping("api/v1/files")
 public class OriginController {

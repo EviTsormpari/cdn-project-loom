@@ -7,6 +7,13 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.io.FileNotFoundException;
 
+/*
+Το GlobalExceptionHandler αποτελεί το κεντρικό σημείο διαχείρισης σφαλμάτων της εφαρμογής.
+
+Μετατρέπει συγκεκριμένα exceptions σε κατάλληλες HTTP αποκρίσεις ώστε να λαμβάνονται
+συνεπή και κατανοητά μηνύματα σφάλματος.
+ */
+
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
