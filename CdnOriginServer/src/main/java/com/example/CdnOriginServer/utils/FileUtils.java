@@ -14,7 +14,6 @@ import java.nio.file.StandardCopyOption;
 // Βοηθητική κλάση για λειτουργίες που χρησιμοποιούνται σε διάφορα σημεία του κώδικα.
 
 public class FileUtils {
-
     private static final Logger logger = LoggerFactory.getLogger(FileUtils.class);
 
     public static File getExistingFileFromFileSystem(FileMetadata fileMetadata) throws FileNotFoundException {
