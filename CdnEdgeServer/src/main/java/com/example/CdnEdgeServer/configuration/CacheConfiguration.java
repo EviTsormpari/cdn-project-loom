@@ -9,13 +9,7 @@ import org.springframework.data.redis.serializer.RedisSerializationContext;
 
 import java.time.Duration;
 
-/*
-Το CacheConfiguration ρυθμίζει τον τρόπο λειτουργίας της κρυφής μνήμης Redis για Java αντικείμενα.
-
-1. Θέτει χρονικό περιορισμό ttl (time-to-live) σε κάθε key ώστε να ανανεώνονται τα δεδομένα.
-2. Δεν αποθηκεύει null δεδομένα.
-3. Επιτρέπει στη Redis την αποθήκευση Java αντικειμένων.
- */
+// Το CacheConfiguration ρυθμίζει τη Redis για αποθήκευση Java αντικειμένων με TTL, χωρίς null values.
 
 @Configuration
 @EnableCaching
@@ -23,7 +17,6 @@ public class CacheConfiguration {
 
     @Bean
     public RedisCacheConfiguration redisCacheConfiguration(){
-
         return RedisCacheConfiguration.defaultCacheConfig()
                 .entryTtl(Duration.ofMinutes(5))
                 .disableCachingNullValues()

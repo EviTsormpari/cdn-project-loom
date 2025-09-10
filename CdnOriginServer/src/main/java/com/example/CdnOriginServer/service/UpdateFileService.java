@@ -22,7 +22,6 @@ import java.nio.file.StandardCopyOption;
 
 @Service
 public class UpdateFileService {
-
     private final OriginRepository originRepository;
     private final Helper helper;
     private static final Logger logger = LoggerFactory.getLogger(UpdateFileService.class);
@@ -34,10 +33,15 @@ public class UpdateFileService {
         this.helper = helper;
     }
 
+    /*
+    Ενημερώνει ένα υπάρχον αρχείο στο σύστημα, στη βάση και στους διακομιστές κρυφής μνήμης.
+    Σε περίπτωση αποτυχίας γίνεται rollback: επαναφορά από backup και αναίρεση αλλαγών στη βάση
+    μέσω @Transactional.
+    */
     @Transactional(rollbackFor = Exception.class)
     public String updateFile(MultipartFile file) throws IOException {
-        FileMetadata newFileMetadata = helper.getFileMetadataFromFile(file); //pairnoume ta newFileMetadata tou kainoutgiou arxeiou
-        FileMetadata fileMetadata = helper.getFileMetadataFromDB(newFileMetadata.getId()); //8a finei elegxos an uparxei stin db kai an uparxoun ua ferei ta newFileMetadata toy paliou arxeio sti basi
+        FileMetadata newFileMetadata = helper.getFileMetadataFromFile(file);
+        FileMetadata fileMetadata = helper.getFileMetadataFromDB(newFileMetadata.getId());
         String filename = fileMetadata.getId();
         helper.validateFileExistence(filename, Existence.MUST_EXIST);
 
@@ -50,19 +54,18 @@ public class UpdateFileService {
             updateFileOnDisk(newFileMetadata, file.getInputStream());
             updatedLocally = true;
             originRepository.save(newFileMetadata);
-            String response = helper.informCaches(filename).getBody() + "and successfully updated at origin for filename: " + filename; //Update tous edge pou exoun to arxeio
+            String response = helper.informCaches(filename).getBody() + "and successfully updated at origin for filename: " + filename;
             logger.info("The file {} updated successfully on the filesystem, database and edge caches", filename);
 
             return response;
-        } catch (Exception e) { //an kapoia diagrafi apotuxei epanaferw to arxeio sto filesystem
+        } catch (Exception e) {
             if (updatedLocally) {
-                helper.restoreFile(backupPath, newFileMetadata);
+                helper.restoreFileOnDisk(backupPath, newFileMetadata);
                 logger.warn("Rollback: restored file {} due to failure", filename, e);
             }
 
             throw e;
         } finally {
-            //ama den sumbei tipota kai ola pane kala mporoume na diagrapsoume to backup arxeio
             Files.deleteIfExists(backupPath);
         }
     }

@@ -3,9 +3,7 @@ package com.example.CdnEdgeServer.model;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
 
-/*
-Το FileMetadata είναι η κλάση για την αναπαράσταση των δεδομένων που αποθηκεύονται στην κρυφή μνήμη.
- */
+// Το FileMetadata είναι η κλάση για την αναπαράσταση των δεδομένων που αποθηκεύονται στην κρυφή μνήμη.
 
 @RedisHash
 public class FileMetadata {

@@ -13,15 +13,12 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 /*
-Το component KeyExpirationListener είναι υπεύθυνο για να "ακούει" τα events λήξης/διαγραφής των κλειδιών της Redis.
-Όταν ληφθεί event για ένα συγκεκριμένο key, καλείται η συνάρτηση deleteLocalFile.
-Η deleteLocalFile διαγράφει το αρχείο από τον τοπικό φάκελο του project.
-Έτσι επιτυγχάνεται ο συγχρονισμός της κρυφής μνήμης και του τοπικού φακέλου του project με τα αρχεία.
+Το KeyExpirationListener "ακούει" events λήξης/διαγραφής από Redis
+και διαγράφει τα αντίστοιχα τοπικά αρχεία για συγχρονισμό.
  */
 
 @Component
 public class KeyExpirationListener implements MessageListener {
-
     @Value("${edge.local.filepath}")
     private String edgeLocalFilepath;
 

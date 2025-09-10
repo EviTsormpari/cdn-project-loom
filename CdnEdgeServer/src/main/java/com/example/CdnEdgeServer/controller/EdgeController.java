@@ -12,22 +12,11 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 
-/*
-Το EdgeController είναι υπεύθυνο για την έκθεση και διαχείριση των REST endpoints του συστήματος.
-
-Μέσω αυτών επιτρέπεται η επικοινωνία εξωτερικών εφαρμογών με τον διακομιστή κρυφής μνήμης.
-Κάθε endpoint αντιστοιχεί σε μια συγκεκριμένη λειτουργικότητα, καλεί το αντίστοιχο service και επιστρέφει
-την κατάλληλη απόκριση (επιτυχία ή σφάλμα) προς τον αιτούντα.
-
-Τα endpoints που παρέχονται είναι για:
-1. Την απόκτηση ενός αρχείου με βάση το όνομά του.
-2. Τη διαγραφή ενός αρχείου με βάση το όνομά του.
- */
+// Το EdgeController εκθέτει τα REST endpoints για ανάκτηση και διαγραφή αρχείων.
 
 @RestController
 @RequestMapping("api/v1/files")
 public class EdgeController {
-
     private final EdgeService edgeService;
 
     @Autowired

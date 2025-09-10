@@ -22,9 +22,10 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 
+// Βοηθητική κλάση για λειτουργίες που χρησιμοποιούνται σε διάφορα σημεία του κώδικα.
+
 @Component
 public class Helper {
-
     private final OriginRepository originRepository;
     private final RestTemplate restTemplate = new RestTemplate();
     private static final Logger logger = LoggerFactory.getLogger(Helper.class);
@@ -74,7 +75,7 @@ public class Helper {
         }
     }
 
-    public void restoreFile(Path backupPath, FileMetadata fileMetadata) throws IOException {
+    public void restoreFileOnDisk(Path backupPath, FileMetadata fileMetadata) throws IOException {
         Path pathForDownloadFile = Paths.get(originFilepath).resolve(fileMetadata.getId());
         Files.copy(backupPath, pathForDownloadFile, StandardCopyOption.REPLACE_EXISTING);
     }

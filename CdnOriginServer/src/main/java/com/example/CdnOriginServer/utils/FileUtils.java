@@ -11,6 +11,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 
+// Βοηθητική κλάση για λειτουργίες που χρησιμοποιούνται σε διάφορα σημεία του κώδικα.
+
 public class FileUtils {
 
     private static final Logger logger = LoggerFactory.getLogger(FileUtils.class);
@@ -22,7 +24,6 @@ public class FileUtils {
             throw new FileNotFoundException("File does not exist at path: " + file.getPath());
         }
 
-        //If we reach here return the file
         return file;
     }
 

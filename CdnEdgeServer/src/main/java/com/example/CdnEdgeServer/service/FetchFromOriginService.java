@@ -19,16 +19,9 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 
-/*
-Υπηρεσία για την απόκτηση των μεταδεδομένων ενός αρχείου από την κρυφή μνήμη ή από τον κεντρικό διακομιστή
-στην περίπτωση που η κρυφή μνήμη δεν παρέχει τα μεταδεδομένα του αρχείου.
- */
-
 @Service
 public class FetchFromOriginService {
-
     private final RestTemplate restTemplate = new RestTemplate();
-
     private static final Logger logger = LoggerFactory.getLogger(FetchFromOriginService.class);
 
     @Value("${origin.server.url}")
@@ -38,30 +31,17 @@ public class FetchFromOriginService {
     private String edgeLocalFilepath;
 
     /*
-    Το @Cacheable πραγματοποιεί την αναζήτηση του #filename στην κρυφή μνήμη.
-    Θέτοντας sync = true μόνο ένα νήμα κάθε φορά μπορεί να εκτελέσει την αναζήτηση.
-    -Το πρώτο νήμα που φτάνει και δε βρίσκει το αρχείο στη cache το ανακτά από τον κεντρικό διακομιστή.
-    -Τα υπόλοιπα νήματα που περιμένουν βλέπουν το αρχείο ήδη στη cache και έτσι αποφεύγεται η διπλή ανάκτηση και εγγραφή.
-
+    Επιστρέφει τα μεταδεδομένα του αρχείου.
     Αν το #filename υπάρχει επιστρέφει τα μεταδεδομένα απευθείας από την κρυφή μνήμη.
-    Αν το #filename δεν υπάρχει στην κρυφή μνήμη εκτελείται η συνάρτηση fetchFileMetadataAndDownLoadFile η οποία:
-
-    1. Καλεί το endpoint του κεντρικού διακομιστή για να αποκτήσει το αρχείο και τα μεταδεδομένα του.
-    2. Δημιουργεί Java αντικείμενο με τα μεταδεδομένα του αρχείου για να είναι εφικτή η αποθήκευση του αντικειμένου
-    στην κρυφή μνήμη.
-    3. Αποθηκεύει το κανονικό αρχείο στον τοπικό φάκελο του project.
-    4. Επιστρέφει τα μεταδεδομένα του αρχείου.
-     */
+    Αν το #filename δεν υπάρχει στην κρυφή μνήμη ζητείται από τον κεντρικό διακομιστή.
+    */
     @Cacheable(value = "fileMetadataCache", key = "#filename", sync = true)
     public FileMetadata fetchFileMetadataAndDownloadFile (String filename) throws IOException {
         logger.info("Fetch from origin started for file: {}", filename);
 
         ResponseEntity<Resource> response = fetchFromOrigin(filename);
-
         HttpHeaders httpHeaders = response.getHeaders();
-
         FileMetadata fileMetadata = createFileMetadataObject(httpHeaders, filename);
-
         downloadFile(response, fileMetadata.getFilepath());
 
         logger.info("Fetch from origin completed for file: {}", filename);
@@ -102,9 +82,7 @@ public class FetchFromOriginService {
             return;
         }
 
-        /*
-        Αν το αρχείο δεν είναι κενό τότε δημιουργείται κανονικά.
-         */
+        // Αν το αρχείο δεν είναι κενό τότε δημιουργείται κανονικά.
         try (InputStream is = response.getBody().getInputStream()) {
             Files.copy(is, Paths.get(filepath), StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException e) {

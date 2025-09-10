@@ -12,20 +12,13 @@ import org.springframework.data.redis.listener.RedisMessageListenerContainer;
 import org.springframework.data.redis.repository.configuration.EnableRedisRepositories;
 
 /*
-Το RedisKeyExpirationConfiguration δημιουργεί τα events λήξης/διαγραφής των κλειδιών της Redis.
-
-1. Δημιουργία κλειδιού expired για τη διαγραφή κλειδιών λόγω του χρονικού περιορισμού TTL.
-2. Δημιουργία κλειδιού evicted για τη διαγραφή κλειδιών λόγω πολιτικής αντικατάστασης αρχείων (π.χ LRU).
-3. Δημιουργία κλειδιού deleted για τη διαγραφή κλειδιών λόγω ενημέρωσης διαγραφής από τον κεντρικό διακομιστή.
-
-Με αυτά τα events ο διακομιστής κρυφής μνήμης μπορεί να συγχρονίσει τη cache και τον τοπικό φάκελο με την
-πραγματική κατάσταση της Redis.
- */
+Το RedisKeyExpirationConfiguration δημιουργεί events λήξης/διαγραφής κλειδιών
+για συγχρονισμό κρυφής μνήμης και τοπικών αρχείων.
+*/
 
 @Configuration
 @EnableRedisRepositories(enableKeyspaceEvents = RedisKeyValueAdapter.EnableKeyspaceEvents.ON_STARTUP)
 public class RedisKeyExpirationConfiguration {
-
     private static final Logger logger = LoggerFactory.getLogger(RedisKeyExpirationConfiguration.class);
 
     @Bean

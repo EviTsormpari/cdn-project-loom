@@ -6,9 +6,8 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import org.springframework.data.domain.Persistable;
 
-/*
-Το FileMetadata είναι η κλάση για την αναπαράσταση των δεδομένων που αποθηκεύονται στη βάση δεδομένων.
- */
+
+//Το FileMetadata είναι η κλάση για την αναπαράσταση των δεδομένων που αποθηκεύονται στη βάση δεδομένων.
 
 @Entity
 public class FileMetadata implements Persistable<String> {
