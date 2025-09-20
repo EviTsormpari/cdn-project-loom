@@ -1,0 +1,105 @@
+version: '3.8'
+services:
+  # -----------------------
+  # PostgreSQL Origin DB
+  # -----------------------
+  postgres:
+    build: ./postgres
+    container_name: postgres-container
+    environment:
+      - POSTGRES_DB=origin_server
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  # -----------------------
+  # Origin Spring Boot
+  # -----------------------
+  origin:
+    build: ./origin
+    container_name: origin-container
+    ports:
+      - "8083:8083"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres-container:5432/origin_server
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=
+    depends_on:
+      - postgres
+
+  # -----------------------
+  # Redis Containers
+  # -----------------------
+  redis1:
+    build: ./redis
+    container_name: redis1
+    ports:
+      - "6380:6380"
+    volumes:
+      - ./CdnEdgeServer/redis/redis1.conf:/usr/local/etc/redis/redis1.conf
+    command: ["redis-server", "/usr/local/etc/redis/redis1.conf"]
+
+  redis2:
+    build: ./redis
+    container_name: redis2
+    ports:
+      - "6379:6379"
+    volumes:
+      - ./CdnEdgeServer/redis/redis2.conf:/usr/local/etc/redis/redis2.conf
+    command: ["redis-server", "/usr/local/etc/redis/redis2.conf"]
+
+  # -----------------------
+  # Edge Spring Boot Containers
+  # -----------------------
+  edge1:
+    build: ./edge
+    container_name: edge1-container
+    environment:
+      - SERVER_PORT=8081
+      - REDIS_HOST=redis1
+      - REDIS_PORT=6380
+      - EDGE_FILEPATH=/app/files
+    ports:
+      - "8081:8081"
+    volumes:
+      - ./files/edge1_files:/app/files
+    depends_on:
+      - redis1
+      - origin
+
+  edge2:
+    build: ./edge
+    container_name: edge2-container
+    environment:
+      - SERVER_PORT=8082
+      - REDIS_HOST=redis2
+      - REDIS_PORT=6379
+      - EDGE_FILEPATH=/app/files
+    ports:
+      - "8082:8082"
+    volumes:
+      - ./files/edge2_files:/app/files
+    depends_on:
+      - redis2
+      - origin
+
+  # -----------------------
+  # Nginx Load Balancer
+  # -----------------------
+  nginx:
+    build: ./nginx
+    container_name: nginx-container
+    ports:
+      - "80:80"
+    depends_on:
+      - edge1
+      - edge2
+
+# -----------------------
+# Volumes for persistency
+# -----------------------
+volumes:
+  postgres_data:

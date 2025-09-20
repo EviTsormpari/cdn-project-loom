@@ -31,8 +31,10 @@ public class Helper {
     private static final Logger logger = LoggerFactory.getLogger(Helper.class);
     @Value("${origin.local.filepath}")
     private String originFilepath;
-    @Value("${edge.server.url}")
-    private String edgeUrl;
+    @Value("${edge1.server.url}")
+    private String edge1Url;
+    @Value("${edge2.server.url}")
+    private String edge2Url;
 
     @Autowired
     public Helper(OriginRepository originRepository) { this.originRepository = originRepository; }
@@ -63,14 +65,17 @@ public class Helper {
         return metadata;
     }
 
-    public void validateFileExistence(String filename, Existence existence) {
-        switch (existence) {
+    public void validateFileExistenceInDB(String filename, Existence existence) {
+        boolean exists = originRepository.existsByFilename(filename);
+
+        switch(existence) {
             case MUST_EXIST -> {
-                logger.info("Success: file exists");
+                if(exists) logger.info("Success: file exists");
+                else throw new GlobalException.FileConflictException("File " + filename + " does not exist");
             }
             case MUST_NOT_EXIST -> {
-                logger.error("File " + filename + " already exists");
-                throw new GlobalException.FileConflictException("File " + filename + " already exists");
+                if(!exists) logger.info("File " + filename + " already exists");
+                else throw new GlobalException.FileConflictException("File " + filename + " already exists");
             }
         }
     }
@@ -81,10 +86,15 @@ public class Helper {
     }
 
     public ResponseEntity<String> informCaches(String filename) {
-        //TODO find all caches
+        restTemplate.exchange(
+                edge1Url + filename,
+                HttpMethod.DELETE,
+                HttpEntity.EMPTY,
+                String.class
+        );
 
         return restTemplate.exchange(
-                edgeUrl + filename,
+                edge2Url + filename,
                 HttpMethod.DELETE,
                 HttpEntity.EMPTY,
                 String.class

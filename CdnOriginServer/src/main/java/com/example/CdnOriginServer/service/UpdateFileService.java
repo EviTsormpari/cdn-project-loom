@@ -43,7 +43,7 @@ public class UpdateFileService {
         FileMetadata newFileMetadata = helper.getFileMetadataFromFile(file);
         FileMetadata fileMetadata = helper.getFileMetadataFromDB(newFileMetadata.getId());
         String filename = fileMetadata.getId();
-        helper.validateFileExistence(filename, Existence.MUST_EXIST);
+        helper.validateFileExistenceInDB(filename, Existence.MUST_EXIST);
 
         Path filePath = Paths.get(fileMetadata.getFilepath());
         Path backupPath = FileUtils.createBackupFile(filePath, filename);

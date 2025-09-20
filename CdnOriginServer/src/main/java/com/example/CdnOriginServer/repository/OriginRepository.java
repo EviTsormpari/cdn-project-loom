@@ -13,6 +13,6 @@ import javax.swing.*;
 @Repository
 public interface OriginRepository extends JpaRepository<FileMetadata, String> {
     FileMetadata findByFilename(String filename);
+    boolean existsByFilename(String filename);
     void deleteByFilename(String filename);
-
 }

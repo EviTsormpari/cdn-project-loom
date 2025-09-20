@@ -41,7 +41,7 @@ public class CreateFileService {
     public String createFile(MultipartFile file) throws IOException {
         FileMetadata fileMetadata = helper.getFileMetadataFromFile(file);
         String filename = fileMetadata.getId();
-        helper.validateFileExistence(filename, Existence.MUST_NOT_EXIST);
+        helper.validateFileExistenceInDB(filename, Existence.MUST_NOT_EXIST);
         Path pathForDownloadFile = Paths.get(originFilepath).resolve(filename);
 
         try {
