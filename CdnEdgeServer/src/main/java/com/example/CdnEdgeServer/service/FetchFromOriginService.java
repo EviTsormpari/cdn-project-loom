@@ -23,10 +23,8 @@ import java.nio.file.StandardCopyOption;
 public class FetchFromOriginService {
     private final RestTemplate restTemplate = new RestTemplate();
     private static final Logger logger = LoggerFactory.getLogger(FetchFromOriginService.class);
-
     @Value("${origin.server.url}")
     private String originUrl;
-
     @Value("${edge.local.filepath}")
     private String edgeLocalFilepath;
 

@@ -6,6 +6,9 @@ WORKDIR /app
 
 # Copy the jar file from the host to the container
 COPY build/libs/CdnEdgeServer-0.0.1-SNAPSHOT.jar CdnEdgeServer.jar
+COPY entrypoint.sh /app/entrypoint.sh
 
-# Run the application
-ENTRYPOINT ["java", "-jar", "CdnEdgeServer.jar"]
+# Make the entrypoint script executable
+RUN chmod +x /app/entrypoint.sh
+
+ENTRYPOINT ["/app/entrypoint.sh"]

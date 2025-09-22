@@ -3,6 +3,7 @@ package com.example.CdnOriginServer.component;
 import com.example.CdnOriginServer.model.FileMetadata;
 import com.example.CdnOriginServer.repository.OriginRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
@@ -13,13 +14,15 @@ import java.nio.file.Files;
 public class FileInitializer implements CommandLineRunner {
 
     private final OriginRepository originRepository;
+    @Value("${origin.local.filepath}")
+    private String originFilepath;
 
     @Autowired
     public FileInitializer(OriginRepository originRepository) { this.originRepository = originRepository; }
 
     @Override
     public void run(String... args) throws Exception {
-        File folder = new File("files");
+        File folder = new File(originFilepath);
         File[] files = folder.listFiles();
 
         if (files != null) {
