@@ -1,5 +1,5 @@
 # We use the OpenJDK image to run the Spring Boot app
-FROM openjdk:21-jdk-alpine
+FROM openjdk:21-jdk-slim
 
 # Set the working directory in the container
 WORKDIR /app

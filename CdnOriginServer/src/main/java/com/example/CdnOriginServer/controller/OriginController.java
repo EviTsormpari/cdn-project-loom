@@ -25,11 +25,6 @@ public class OriginController {
     @Autowired
     public OriginController(OriginService originService) { this.originService = originService; }
 
-    @GetMapping
-    public String test() {
-        return "origin";
-    }
-
     @GetMapping("/{filename}")
     public ResponseEntity<InputStreamResource> getFileByFilename(@PathVariable String filename) throws FileNotFoundException {
         FileResourceDTO fileResourceDTO = originService.getFileByFilename(filename);

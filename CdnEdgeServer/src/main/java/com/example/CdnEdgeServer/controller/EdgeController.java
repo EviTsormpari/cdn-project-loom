@@ -22,11 +22,6 @@ public class EdgeController {
     @Autowired
     public EdgeController(EdgeService edgeService) { this.edgeService = edgeService; }
 
-    @GetMapping
-    public String test() {
-        return "edge";
-    }
-
     @GetMapping("/{filename}")
     public ResponseEntity<InputStreamResource> getFileByFilename (@PathVariable String filename) throws IOException {
         FileResourceDTO fileResourceDTO = edgeService.getFileByName(filename);

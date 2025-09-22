@@ -44,7 +44,7 @@ public class DeleteFileService {
             deleteLocalFile(file, filename);
             deletedLocally = true;
             originRepository.deleteByFilename(filename);
-            String response = helper.informCaches(filename).getBody() + "and origin for file: ";
+            String response = helper.informCaches(filename).getBody() + "and origin for file: " + filename;
             logger.info("The file {} deleted successfully from the filesystem, database and edge caches", filename);
 
             return response;
