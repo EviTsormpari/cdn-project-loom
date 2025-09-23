@@ -106,6 +106,45 @@ services:
     depends_on:
       - edge1
       - edge2
+  
+   # -----------------------
+  # InfluxDB
+  # -----------------------
+  influxdb:
+    image: influxdb:1.8
+    container_name: influxdb-container
+    ports:
+      - "8086:8086"
+    environment:
+      - INFLUXDB_DB=k6
+      - INFLUXDB_ADMIN_ENABLED=true
+
+  # -----------------------
+  # Grafana
+  # -----------------------
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana-container
+    ports:
+      - "3000:3000"
+    volumes:
+    - ./grafana_data:/var/lib/grafana
+    depends_on:
+      - influxdb
+
+  # -----------------------
+  # K6
+  # -----------------------
+  k6:
+    image: grafana/k6:latest
+    container_name: k6-container
+    depends_on:
+      - nginx
+      - influxdb
+    volumes:
+      - ./scripts/load_test_script.js:/scripts/load_test_script.js
+    entrypoint: ["sh", "-c"]
+    command: ["sleep infinity"]
 
 # -----------------------
 # Volumes for persistency
