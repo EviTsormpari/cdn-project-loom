@@ -1,12 +1,8 @@
 param(
     [int]$VUS = 10,
-    [string]$DURATION = "10s",
+    [string]$DURATION = "60s",
     [string]$FILE = "cdn.pdf"
 )
-
-# Διαγραφή και επανεκκίνηση των containers για διαγραφή των παλιών δεδομένων.
-docker compose down -v influxdb grafana k6
-docker compose up -d influxdb grafana k6
 
 Write-Host "---------------------------------------------"
 Write-Host "Load testing with Grafana dashboard: http://localhost:3000"

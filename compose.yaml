@@ -8,7 +8,7 @@ services:
     environment:
       - POSTGRES_DB=origin_server
       - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=
+      - POSTGRES_PASSWORD=postGreSql2003
     ports:
       - "5432:5432"
     volumes:
@@ -26,7 +26,7 @@ services:
       - SERVER_PORT=8083
       - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/origin_server
       - SPRING_DATASOURCE_USERNAME=postgres
-      - SPRING_DATASOURCE_PASSWORD=
+      - SPRING_DATASOURCE_PASSWORD=postGreSql2003
       - ORIGIN_FILEPATH=/app/files
       - EDGE1_URL=http://edge1:8081/api/v1/files/
       - EDGE2_URL=http://edge2:8082/api/v1/files/
@@ -118,6 +118,8 @@ services:
     environment:
       - INFLUXDB_DB=k6
       - INFLUXDB_ADMIN_ENABLED=true
+    volumes:
+      - ./influxdb_data:/var/lib/influxdb
 
   # -----------------------
   # Grafana
