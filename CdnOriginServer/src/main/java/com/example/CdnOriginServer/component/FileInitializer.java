@@ -37,9 +37,8 @@ public class FileInitializer implements CommandLineRunner {
                         String mimeType = Files.probeContentType(f.toPath());
                         if (mimeType == null) {
                             mimeType = "application/octet-stream";
-                        } else {
-                            fileMetadata.setFiletype(mimeType);
                         }
+                        fileMetadata.setFiletype(mimeType);
                         originRepository.save(fileMetadata);
                     }
                 }
