@@ -1,4 +1,4 @@
 [wsl2]
 memory=8GB   # μέγιστη RAM
 processors=4 # μέγιστοι πυρήνες CPU
-swap=16GB    # swap file (εικονική RAM με χρήση δίσκου)
+swap=8GB    # swap file (εικονική RAM με χρήση δίσκου)
