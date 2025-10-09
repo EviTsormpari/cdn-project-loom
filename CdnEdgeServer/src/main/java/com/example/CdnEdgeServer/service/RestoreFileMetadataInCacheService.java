@@ -9,7 +9,7 @@ public class RestoreFileMetadataInCacheService {
     private static final Logger logger = LoggerFactory.getLogger(RestoreFileMetadataInCacheService.class);
 
     // Επαναφορά μεταδεδομένων αρχείου στη Redis.
-    @CachePut(value = "fileMetadataCache", key = "#fileMetadata.id")
+    @CachePut(value = "fileMetadataCache", key = "#fileMetadata.filename")
     public FileMetadata restoreFileMetadata(FileMetadata fileMetadata) {
         logger.info("File metadata restore triggered for {}", fileMetadata.getId());
         return fileMetadata;
