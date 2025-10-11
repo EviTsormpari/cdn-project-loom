@@ -37,13 +37,13 @@ public class Helper {
     private String edge2Url;
 
     @Autowired
-    public Helper(OriginRepository originRepository) { this.originRepository = originRepository; }
+    public Helper(OriginRepository originRepository) {this.originRepository = originRepository;}
 
     public FileMetadata getFileMetadataFromDB(String filename) throws FileNotFoundException {
         FileMetadata fileMetadata = originRepository.findByFilename(filename);
 
         if (fileMetadata == null) {
-            logger.error("File metadata not found for filename: {}" , filename);
+            logger.error("File metadata not found for filename: {}", filename);
             throw new FileNotFoundException("File metadata not found for filename: " + filename);
         }
 
@@ -68,13 +68,13 @@ public class Helper {
     public void validateFileExistenceInDB(String filename, Existence existence) {
         boolean exists = originRepository.existsByFilename(filename);
 
-        switch(existence) {
+        switch (existence) {
             case MUST_EXIST -> {
-                if(exists) logger.info("Success: file exists");
+                if (exists) logger.info("Success: file exists");
                 else throw new GlobalException.FileConflictException("File " + filename + " does not exist");
             }
             case MUST_NOT_EXIST -> {
-                if(!exists) logger.info("File " + filename + " already exists");
+                if (!exists) logger.info("File " + filename + " already exists");
                 else throw new GlobalException.FileConflictException("File " + filename + " already exists");
             }
         }
@@ -85,19 +85,33 @@ public class Helper {
         Files.copy(backupPath, pathForDownloadFile, StandardCopyOption.REPLACE_EXISTING);
     }
 
-    public ResponseEntity<String> informCaches(String filename) {
-        restTemplate.exchange(
-                edge1Url + filename,
-                HttpMethod.DELETE,
-                HttpEntity.EMPTY,
-                String.class
-        );
+    public String informEdge1(String filename) {
+        try {
+            ResponseEntity<String> response = restTemplate.exchange(
+                    edge1Url + filename,
+                    HttpMethod.DELETE,
+                    HttpEntity.EMPTY,
+                    String.class
+            );
+            return response.getBody();
+        } catch( Exception e) {
+            logger.warn("Failed to inform edge1 cache for {} ", filename, e);
+            return "Failed to inform edge1";
+        }
+    }
 
-        return restTemplate.exchange(
-                edge2Url + filename,
-                HttpMethod.DELETE,
-                HttpEntity.EMPTY,
-                String.class
-        );
+    public String informEdge2(String filename) {
+        try {
+            ResponseEntity<String> response = restTemplate.exchange(
+                    edge2Url + filename,
+                    HttpMethod.DELETE,
+                    HttpEntity.EMPTY,
+                    String.class
+            );
+            return response.getBody();
+        } catch (Exception e) {
+            logger.warn("Failed to inform edge2 cache for {}", filename, e);
+            return "Failed to inform edge2";
+        }
     }
 }

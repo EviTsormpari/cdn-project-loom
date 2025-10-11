@@ -13,6 +13,6 @@ public class DeleteFileFromCacheService {
     @CacheEvict(value = "fileMetadataCache", key = "#filename")
     public String deleteFileByFilename(String filename) {
         logger.info("Deletion triggered at edge");
-        return "File deletion triggered at edge ";
+        return "File deletion triggered at edge";
     }
 }

@@ -24,7 +24,7 @@ public class GlobalExceptionHandler {
                 .body(ex.getMessage());
     }
 
-    @ExceptionHandler(RuntimeException.class)
+    @ExceptionHandler(GlobalException.FileConflictException.class)
     public ResponseEntity<String> handleRuntimeException(GlobalException.FileConflictException ex) {
         return ResponseEntity
                 .status(HttpStatus.CONFLICT)
