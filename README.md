@@ -1,0 +1,2 @@
+# Content Delivery Network (CDN) using Project Loom
+This project presents the design and implementation of a **Content Delivery Network (CDN)** system built with **Java** using **Project Loom** for lightweight thread virtualization. The goal of this system is to simulate a scalable and efficient CDN architecture capable of delivering content rapidly to users by leveraging concurrent programming and cache-based optimizations.
