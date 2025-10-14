@@ -17,19 +17,19 @@ The system consists of several core entities, each responsible for a specific fu
 - Employ an **LRU (Least Recently Used)** policy for cache space management.
 - Serve cached content to clients to minimize latency and reduce origin load.
 
-  ### ⚖️ Load Balancer
-  - The **Nginx load balancer** distributes user requests across edge servers.
-  - Implements the **Round Robin** algorithm to ensure load distribution and high availability.
+### ⚖️ Load Balancer
+- The **Nginx load balancer** distributes user requests across edge servers.
+- Implements the **Round Robin** algorithm to ensure load distribution and high availability.
  
-  ## 🛠 Technologies Used
-  - **Project Loom**
-  - Java 21+
-  - Spring Boot 3.4+
-  - PostgreSQL
-  - Redis
-  - **Docker Compose**
+## 🛠 Technologies Used
+- **Project Loom**
+- Java 21+
+- Spring Boot 3.4+
+- PostgreSQL
+- Redis
+- **Docker Compose**
  
-  ## 📚 Author
-  **[Paraskevi Tsormpari]**
-  Thesis Project
-  Department of Appliend Informatics, University of Macedonia.
+## 📚 Author
+**[Paraskevi Tsormpari]**
+Thesis Project
+Department of Appliend Informatics, University of Macedonia.
