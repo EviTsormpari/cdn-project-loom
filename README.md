@@ -4,12 +4,12 @@ To achieve this, a CDN was developed to show how virtual threads improve respons
 
 ---
 
-## ⚙️ Sytem Architecture
+## ⚙️ System Architecture
 The system consists of several core entities, each responsible for a specific function in the CDN workflow.
 
 ### 🖥️ Origin Server
 - Stores the **original content**.
-- When content is updated or deleted, it automatically **informs all edge caches** to synchronize with it.
+- When content is updated or deleted, it automatically **informs all edge caches** to synchronize.
 
 ### 🌍 Edge Servers (2 instances)
 - Retrieve content from origin **only if it is not available in cache**.
@@ -20,6 +20,8 @@ The system consists of several core entities, each responsible for a specific fu
 ### ⚖️ Load Balancer
 - The **Nginx load balancer** distributes user requests across edge servers.
 - Implements the **Round Robin** algorithm to ensure load distribution and high availability.
+
+---
  
 ## 🛠 Technologies Used
 - **Project Loom**
