@@ -30,6 +30,8 @@ The system consists of several core entities, each responsible for a specific fu
 - PostgreSQL
 - Redis
 - **Docker Compose**
+
+---
  
 ## 📚 Author
 **[Paraskevi Tsormpari]**
