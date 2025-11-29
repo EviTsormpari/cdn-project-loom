@@ -5,4 +5,4 @@
 rm -f /app/files/*
 
 # Εκκίνηση της Spring Boot εφαρμογής.
-exec java -jar CdnEdgeServer.jar
+exec java -jar app.jar
