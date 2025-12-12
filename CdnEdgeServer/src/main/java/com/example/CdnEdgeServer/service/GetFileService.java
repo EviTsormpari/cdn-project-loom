@@ -16,9 +16,7 @@ public class GetFileService {
     private final FetchFromOriginService fetchFromOriginService;
 
     @Autowired
-    public GetFileService(FetchFromOriginService fetchFromOriginService) {
-        this.fetchFromOriginService = fetchFromOriginService;
-    }
+    public GetFileService(FetchFromOriginService fetchFromOriginService) { this.fetchFromOriginService = fetchFromOriginService; }
 
     // Επιστρέφει το αρχείο και τα metadata του στη μορφή FileResourceDTO
     public FileResourceDTO getFileByFilename(String filename) throws IOException {

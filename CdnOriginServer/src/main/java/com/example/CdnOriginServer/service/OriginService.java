@@ -19,7 +19,6 @@ public class OriginService {
     private final CreateFileService createFileService;
     private final DeleteFileService deleteFileService;
 
-
     @Autowired
     public OriginService(GetFileService getFileService, UpdateFileService updateFileService, DeleteFileService deleteFileService, CreateFileService createFileService) {
         this.getFileService = getFileService;

@@ -4,6 +4,7 @@ import com.example.CdnEdgeServer.model.FileMetadata;
 import com.example.CdnEdgeServer.service.RestoreFileMetadataInCacheService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.connection.Message;
 import org.springframework.data.redis.connection.MessageListener;
@@ -27,7 +28,8 @@ public class KeyExpirationListener implements MessageListener {
     private String edgeLocalFilepath;
     private static final Logger logger = LoggerFactory.getLogger(KeyExpirationListener.class);
 
-    public KeyExpirationListener(RestoreFileMetadataInCacheService restoreFileMetadataInCacheService) {this.restoreFileMetadataInCacheService = restoreFileMetadataInCacheService;}
+    @Autowired
+    public KeyExpirationListener(RestoreFileMetadataInCacheService restoreFileMetadataInCacheService) { this.restoreFileMetadataInCacheService = restoreFileMetadataInCacheService; }
 
     @Override
     public void onMessage(Message message, byte[] bytes) {

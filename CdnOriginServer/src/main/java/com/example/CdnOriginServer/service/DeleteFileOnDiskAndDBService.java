@@ -6,6 +6,7 @@ import com.example.CdnOriginServer.repository.OriginRepository;
 import com.example.CdnOriginServer.utils.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,6 +21,7 @@ public class DeleteFileOnDiskAndDBService {
     private final Helper helper;
     private static final Logger logger = LoggerFactory.getLogger(DeleteFileOnDiskAndDBService.class);
 
+    @Autowired
     public DeleteFileOnDiskAndDBService(OriginRepository originRepository, Helper helper) {
         this.originRepository = originRepository;
         this.helper = helper;
