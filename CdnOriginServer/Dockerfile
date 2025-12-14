@@ -1,11 +1,11 @@
-# We use the OpenJDK image to run the Spring Boot app.
+# Εικόνα OpenJDK για την εκτέλεση της εφαρμογής Spring Boot.
 FROM eclipse-temurin:21-jdk
 
-# Set the working directory in the container.
+# Ορισμός του φακέλου εργασίας μέσα στο container.
 WORKDIR /app
 
-# Copy the jar file from the host to the container.
+# Αντιγραφή του αρχείου jar από το σύστημα υποδοχής στο container.
 COPY build/libs/*.jar app.jar
 
-# Run the application
+# Εκκίνηση της εφαρμογής
 ENTRYPOINT ["java", "-jar", "app.jar"]

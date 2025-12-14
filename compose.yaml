@@ -122,19 +122,6 @@ services:
       - ./influxdb_data:/var/lib/influxdb
 
   # -----------------------
-  # Grafana
-  # -----------------------
-  grafana:
-    image: grafana/grafana:latest
-    container_name: grafana-container
-    ports:
-      - "3000:3000"
-    volumes:
-    - ./grafana_data:/var/lib/grafana
-    depends_on:
-      - influxdb
-
-  # -----------------------
   # K6
   # -----------------------
   k6:
