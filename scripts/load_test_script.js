@@ -15,6 +15,4 @@ export default function () {
 
   // Έλεγχος αν το request ολοκληρώθηκε με επιτυχία.
   check(res, { 'status was 200': (r) => r.status === 200 });
-
-  sleep(1);
 }
