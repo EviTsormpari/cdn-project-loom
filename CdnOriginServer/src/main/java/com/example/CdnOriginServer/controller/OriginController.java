@@ -4,6 +4,7 @@ import com.example.CdnOriginServer.dto.FileResourceDTO;
 import com.example.CdnOriginServer.model.FileMetadata;
 import com.example.CdnOriginServer.service.OriginService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -21,12 +22,17 @@ import java.io.IOException;
 @RequestMapping("api/v1/files")
 public class OriginController {
     private final OriginService originService;
+    @Value("${simulated.latency.ms}")
+    private long latency;
 
     @Autowired
     public OriginController(OriginService originService) { this.originService = originService; }
 
     @GetMapping("/{filename}")
-    public ResponseEntity<InputStreamResource> getFileByFilename(@PathVariable String filename) throws FileNotFoundException {
+    public ResponseEntity<InputStreamResource> getFileByFilename(@PathVariable String filename) throws FileNotFoundException, InterruptedException {
+        // Προσομοίωση μπλοκαρισμένης λειτουργίας
+        Thread.sleep(latency);
+
         FileResourceDTO fileResourceDTO = originService.getFileByFilename(filename);
         FileMetadata metadata = fileResourceDTO.metadata();
         InputStreamResource resource = fileResourceDTO.resource();
@@ -39,19 +45,28 @@ public class OriginController {
     }
 
     @PutMapping("/update")
-    public ResponseEntity<String> updateFile(@RequestParam("file") MultipartFile file) throws IOException {
+    public ResponseEntity<String> updateFile(@RequestParam("file") MultipartFile file) throws IOException, InterruptedException {
+        // Προσομοίωση μπλοκαρισμένης λειτουργίας
+        Thread.sleep(latency);
+
         String response = originService.updateFile(file);
         return ResponseEntity.ok(response);
     }
 
     @PostMapping("/upload")
-    public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile file) throws IOException {
+    public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile file) throws IOException, InterruptedException {
+        // Προσομοίωση μπλοκαρισμένης λειτουργίας
+        Thread.sleep(latency);
+
         String response = originService.createFile(file);
         return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/{filename}")
-    public ResponseEntity<String> deleteFileByFilename(@PathVariable String filename) throws IOException {
+    public ResponseEntity<String> deleteFileByFilename(@PathVariable String filename) throws IOException, InterruptedException {
+        // Προσομοίωση μπλοκαρισμένης λειτουργίας
+        Thread.sleep(latency);
+
         String response = originService.deleteFileByFilename(filename);
         return ResponseEntity.ok(response);
     }

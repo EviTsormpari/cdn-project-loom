@@ -4,6 +4,7 @@ import com.example.CdnEdgeServer.dto.FileResourceDTO;
 import com.example.CdnEdgeServer.model.FileMetadata;
 import com.example.CdnEdgeServer.service.EdgeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -18,12 +19,17 @@ import java.io.IOException;
 @RequestMapping("api/v1/files")
 public class EdgeController {
     private final EdgeService edgeService;
+    @Value("${simulated.latency.ms}")
+    private long latency;
 
     @Autowired
     public EdgeController(EdgeService edgeService) { this.edgeService = edgeService; }
 
     @GetMapping("/{filename}")
-    public ResponseEntity<InputStreamResource> getFileByFilename (@PathVariable String filename) throws IOException {
+    public ResponseEntity<InputStreamResource> getFileByFilename (@PathVariable String filename) throws IOException, InterruptedException {
+        // Προσομοίωση μπλοκαρισμένης λειτουργίας
+        Thread.sleep(latency);
+
         FileResourceDTO fileResourceDTO = edgeService.getFileByName(filename);
         FileMetadata metadata = fileResourceDTO.metadata();
         InputStreamResource resource = fileResourceDTO.resource();
@@ -36,7 +42,9 @@ public class EdgeController {
     }
 
     @DeleteMapping("/{filename}")
-    public ResponseEntity<String> deleteFileByFilename (@PathVariable String filename) {
+    public ResponseEntity<String> deleteFileByFilename (@PathVariable String filename) throws InterruptedException {
+        // Προσομοίωση μπλοκαρισμένης λειτουργίας
+        Thread.sleep(latency);
         String response = edgeService.deleteFileByFilename(filename);
         return ResponseEntity.ok(response);
     }
