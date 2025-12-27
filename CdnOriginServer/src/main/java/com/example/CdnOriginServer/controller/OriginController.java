@@ -4,7 +4,6 @@ import com.example.CdnOriginServer.dto.FileResourceDTO;
 import com.example.CdnOriginServer.model.FileMetadata;
 import com.example.CdnOriginServer.service.OriginService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
